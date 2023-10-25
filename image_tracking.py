@@ -52,17 +52,17 @@ def find_and_map_ball(row, col):
     bottom = min(SCREEN_HEIGHT, row+int(BALL_RADIUS*2.5))
     right = min(SCREEN_WIDTH, col + int(BALL_RADIUS*2.5))
     left = max(0, col - int(BALL_RADIUS*2.5))
-    print("Top:" + str(top))
-    print("Bottom:" + str(bottom))
-    print("Right:" + str(right))
-    print("Left:" + str(left))
+    # print("Top:" + str(top))
+    # print("Bottom:" + str(bottom))
+    # print("Right:" + str(right))
+    # print("Left:" + str(left))
 
     p1 = ()
     p2 = ()
     p3 = ()
     # Loop from the left until you garunteed hit a point on the ball
 
-    print("Good Shit is at: ", int(5 * (bottom-top)/5))
+    # print("Good Shit is at: ", int(5 * (bottom-top)/5))
 
 
     for i in range(left, right):
@@ -73,11 +73,11 @@ def find_and_map_ball(row, col):
     for i in range(top, bottom):
         for num_div in range(1, 4):
             if is_single_color(im[i][int(left + (right-left)/num_div)][0], im[i][int(left + (right-left)/num_div)][1], im[i][int(left + (right-left)/num_div)][2]):
-                p2 = (int(top + (bottom-top)/num_div), i)
+                p2 = (i, int(left + (right-left)/num_div))
                 break
 
-    for i in range(left, right):
-        for num_div in range(3, 0, -1):
+    for i in range(right, left, -1):
+        for num_div in range(1, 4):
             if is_single_color(im[int(top + (bottom-top)/num_div)][i][0], im[int(top + (bottom-top)/num_div)][i][1], im[int(top + (bottom-top)/num_div)][i][2]):
                 p3 = (int(top + (bottom-top)/num_div), i)
                 break
@@ -157,6 +157,10 @@ def find_and_map_ball(row, col):
     #             p3 = (int(4 * (bottom-top)/5), i)
     #             break
     
+    # print("p1:", p1)
+    # print("p2:", p2)
+    # print("p3:", p3)
+
     d1 = pow(p1[0], 2) + pow(p1[1], 2)
     d2 = pow(p2[0], 2) + pow(p2[1], 2)
     d3 = pow(p3[0], 2) + pow(p3[1], 2)
@@ -170,7 +174,6 @@ def find_and_map_ball(row, col):
 
 
 
-cap = cv2.VideoCapture(0)
 
 # Get a frame from the cap device
 # avg = 0
@@ -186,15 +189,13 @@ cap = cv2.VideoCapture(0)
 #         avg += end - start
 
 
-
-ret, im = cap.read()
-print(type(im))
+# print(type(im))
 
 
-print("---------------")
+# print("---------------")
 # im = cv2.imread('ball.png')
 # print(type(im))
-print("-----------------------")
+# print("-----------------------")
 
 # print("There")
 
@@ -209,29 +210,51 @@ print("-----------------------")
 # plt.show()
 
 
-start = time.time()
+# plt.imshow(im)
+# plt.show()      
 
 
-print(len(im))
-print(len(im[0]))
+# print(len(im))
+# print(len(im[0]))
 
 # print(len(im[0]))
-for row in range(0, SCREEN_HEIGHT-1, BALL_RADIUS):
-    for col in range(0, SCREEN_WIDTH-1, BALL_RADIUS):
-        if is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]) and is_single_color(im[row+1][col+1][0], im[row+1][col+1][1], im[row+1][col+1][2]) and is_single_color(im[row-1][col-1][0], im[row-1][col-1][1], im[row-1][col-1][2]):
-            print("Found Color at position: " + str(col) + ", " + str(row))
-            print("Colors at position include " + str(im[row][col]) + "\n\n")
-            print("Colors at position 176, 221 include " + str(im[176][221]) + "\n\n")
 
-            plt.imshow(im)
-            plt.show()      
-            center = find_and_map_ball(row, col)
-            # bfs(row, col)
-            
-            print("Center of ball found at pos (" + str(center[0]) + ", " + str(center[1]) + ")")
-            break
+def find_center():
+    try:
+        for row in range(0, SCREEN_HEIGHT-1, BALL_RADIUS):
+            for col in range(0, SCREEN_WIDTH-1, BALL_RADIUS):
+                if is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]) and is_single_color(im[row+1][col+1][0], im[row+1][col+1][1], im[row+1][col+1][2]) and is_single_color(im[row-1][col-1][0], im[row-1][col-1][1], im[row-1][col-1][2]):
+                    print("Found Color at position: " + str(col) + ", " + str(row))
+                    print("Colors at position include " + str(im[row][col]))
 
-print("Time ellapsed 2: " + str(time.time() - start))
+                    center = find_and_map_ball(row, col)            
+                    print("Center of ball found at pos (" + str(center[1]) + ", " + str(center[0]) + ")")
+                    completed = True
+    except:
+        print("Found Color at position: " + str(col) + ", " + str(row))
+        print("Colors at position include " + str(im[row][col]))
+        plt.imshow(im)
+        plt.show()  
+
+while True:
+    
+    # time.sleep(3)
+    # print("3 Seconds!")
+    # time.sleep(3)
+    start = time.time()
+    cap = cv2.VideoCapture(0)
+    ret, im = cap.read()
+    print("Time for Video Capture: " + str((time.time() - start)) + " s.")
+    start = time.time()
+    find_center()
+
+    # print("Time for Find Center: " + str((time.time() - start)) + " s.")
+
+    # plt.imshow(im)
+    # plt.show() 
+    # if input("Continue? ") == "N":
+    #     break  
+
 
 
 
