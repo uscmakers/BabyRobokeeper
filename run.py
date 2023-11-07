@@ -1,5 +1,6 @@
 from path_prediction import PathPrediction
 from calibration import Calibration
+from serial import send_msg
 
 TABLE_WIDTH = 10
 TABLE_HEIGHT =  5
@@ -26,3 +27,5 @@ print(prj)
 # path = PathPrediction(x1, y1, x2, y2)
 # print(path.find_path_end())
 
+
+send_msg('Hello world')
