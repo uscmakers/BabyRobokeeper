@@ -24,4 +24,4 @@ class Calibration():
         return H
     
     def perform_transformation(self, p1):
-        return np.matmul(self.H, np.array([[p1[0]], [p1[1]], [1]]))
+        return np.matmul(self.H, np.array([p1[0], p1[1]]))

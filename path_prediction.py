@@ -1,7 +1,7 @@
 ## Predict where the ball will be at by the time it arrives to the goal
 
 class PathPrediction():
-    def __init__(self, x1, y1, x2, y2):
+    def __init__(self, l, w, x1, y1, x2, y2):
         #constants
         self.l = 50
         self.w = 10
