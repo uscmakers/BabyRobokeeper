@@ -17,7 +17,6 @@ class Calibration():
             A.append([x, y, 1, 0, 0, 0, -u * x, -u * y, -u])
             A.append([0, 0, 0, x, y, 1, -v * x, -v * y, -v])
         A = np.asarray(A)
-        print(A)
         U, S, Vh = np.linalg.svd(A)
         L = Vh[-1, :] / Vh[-1, -1]
         H = L.reshape(3, 3)
