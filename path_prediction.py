@@ -1,33 +1,33 @@
 ## Predict where the ball will be at by the time it arrives to the goal
 
 class PathPrediction():
-    def __init__(self, l, w, x1, y1, x2, y2):
+    def __init__(self, table_width, table_height):
         #constants
-        self.l = 50
-        self.w = 10
+        self.table_width = table_width
+        self.table_height = table_height
 
-        #inputs
-        self.x1 = x1
-        self.y1 = y1
-        self.m = (y2-y1)/(x2-x1)
-
-    def find_path_end(self):
+    def find_path_end(self, p1, p2):
+        x1 = p1[0]
+        y1 = p1[1]
+        x2 = p2[0]
+        y2 = p2[1]
+        m = (y2-y1)/(x2-x1)
         while True:
-            path_end = self.find_y_intercept()
-            if path_end > self.w/2 or path_end < -self.w/2:
-                self.calculate_new_path()
+            path_end = self.find_y_intercept(x1, y1, m)
+            if path_end > self.table_height/2 or path_end < -self.table_height/2:
+                self.calculate_new_path(x1, y1, m)
             else:
                 return path_end
 
-    def find_y_intercept(self):
-        return -self.m * self.x1 + self.y1
+    def find_y_intercept(self, x1, y1, m):
+        return -m*x1 + y1
 
-    def calculate_new_path(self):
-        if (self.m > 0):
-            self.x1 = (self.w/2 - self.y1 + self.m*self.x1) / self.m
-            self.y1 = self.w/2
+    def calculate_new_path(self, x1, y1, m):
+        if (m > 0):
+            x1 = (self.table_height/2 - y1 + m*x1) / m
+            y1 = self.table_height/2
         else:
-            self.x1 = (-self.w/2 - self.y1 + self.m*self.x1) / self.m
-            self.y1 = -self.w/2
-        self.m = -self.m
+            x1 = (-self.table_height/2 - y1 + m*x1) / m
+            y1 = -self.table_height/2
+        m = -m
 
