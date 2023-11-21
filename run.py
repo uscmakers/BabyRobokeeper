@@ -29,7 +29,7 @@ smooth_queue = []
 while True:
     x, y = img_tracking.get_center()   # TO DO - rename function, bug fixes, return separately (not tuple), color adjustment (Kayal)
     prj = cal.perform_transformation([x,y])
-    path_end = path_prediction.find_path_end([prev_x, prev_y], prj)   # TO DO - fix inputs for initializing + function (Enrique)
+    path_end = path_prediction.find_path_end([prev_x, prev_y], prj)
     smooth_queue.insert(0, path_end)
     if len(smooth_queue) > 5:
         smooth_queue = smooth_queue[:5]
