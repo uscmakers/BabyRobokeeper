@@ -31,3 +31,8 @@ class PathPrediction():
             y1 = -self.table_height/2
         m = -m
 
+    def exponential_smoothing(self, smooth_queue):
+        alpha = 0.9
+        for i in range(1, len(smooth_queue)):
+            smooth_queue[0] = alpha * smooth_queue[0] + (1-alpha)*smooth_queue[i]
+        return smooth_queue
