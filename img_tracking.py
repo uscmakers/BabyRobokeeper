@@ -18,9 +18,9 @@ RED_LEEWAY = COLOR_LEEWAY
 GREEN_LEEWAY = COLOR_LEEWAY
 BLUE_LEEWAY = COLOR_LEEWAY
 
-BALL_R = 140
-BALL_G = 140
-BALL_B = 140
+BALL_R = 230
+BALL_G = 130
+BALL_B = 50
 
 
 class BallTracking():
@@ -28,26 +28,13 @@ class BallTracking():
     def __init__(self, screen_width, screen_height):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.cap = cv2.VideoCapture(0)
 
-    # If we are looking for the only thing that would have blue in it, for example
+    # If we ara looking for the only thing that would have blue in it, for example
     def is_single_color(self, r, g, b):
-        # OLD
-        # if DISTINCTIVE_RED:
-        #     if r >= 128:
-        #         return True
-        # elif DISTINCTIVE_GREEN:
-        #     if g <= 128:
-        #         return True
-        # elif DISTINCTIVE_BLUE:
-        #     if b >= 40:
-        #         return True
-
-        # Checks for white ball
-        if r >= BALL_R and g >= BALL_G and b >= BALL_B:
+        if abs(BALL_R - r) <= RED_LEEWAY and abs(BALL_G - g) <= GREEN_LEEWAY and abs(BALL_B - b) <= BLUE_LEEWAY:
             return True
         return False
-
-
 
 
     def bfs(self, im, start_row, start_col):
@@ -61,8 +48,6 @@ class BallTracking():
         queue = deque([(start_row, start_col)])
         # Perform BFS
         total_pixels = 0
-        # 35 - 24
-        # 25 - 17
         # We know that it will always be short right and down by .68
         # Keep track of the farthest pixels
         max_left = (-1, 100000)
@@ -92,47 +77,28 @@ class BallTracking():
                     total_pixels += 1
 
             if total_pixels > 3*BALL_RADIUS and max_right[1]-max_left[1] >= BALL_RADIUS*2/3 and max_down[0]-max_up[0] >= BALL_RADIUS*2/3:
-
-                # print("Ball is ", max_right[1]-max_left[1], " Pixels in Width, and ", max_down[0]-max_up[0], " Pixels in Height")
-                # print("Max Left: ", max_left[1], ",", max_left[0])
-                # print("Max Right: ", max_right[1], ",", max_right[0])
-                # print("Max Up: ", max_up[1], ",", max_up[0])
-                # print("Max Down: ", max_down[1], ",", max_down[0])
-
                 center = (max_left[1] + BALL_RADIUS, max_up[0] + BALL_RADIUS)
-                # center = find_from_edges(max_left, max_right, max_up, max_down)
                 return True, center
         return False, (-1, -1)
 
 
 
 
-    # print(len(im[0]))
-    def do_shit(self, im):
+    def get_center(self):        
+        ret, im = self.cap.read()
+        # Uncomment to see image
+        # plt.imshow(im)
+        # plt.show()
         for row in range(0, self.screen_height, BALL_RADIUS):
             for col in range(0, self.screen_width, BALL_RADIUS):
-                if self.is_single_color(self.im[row][col][0], self.im[row][col][1], self.im[row][col][2]):
+                if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]):
                     top = max(0, row-BALL_RADIUS*4)
                     bottom = min(self.screen_height, row+BALL_RADIUS*4)
                     right = min(self.screen_width, col + BALL_RADIUS*4)
                     left = max(0, col - BALL_RADIUS*4)
-                    # cropped_img = 3
-
-                    bfs_true, center = self.bfs(self.im, row, col)
+                    bfs_true, center = self.bfs(im, row, col)
                     if bfs_true:
-                        print("Found Color at position: " + str(col) + ", " + str(row))
-                        print("Colors at position include " + str(self.im[row][col]))
                         print("Center of ball found at pos (" + str(center[0]) + ", " + str(center[1]) + ")\n\n")
-                        return (center)
-        return (-1, -1)
-
-    def run(self):
-        while True:
-            start_time  = time.time()
-            cap = cv2.VideoCapture(0)
-            ret, im = cap.read()
-            # plt.imshow(im)
-            # plt.show()
-            ceneter = self.do_shit(im)
-            print("Time ellapsed 2: " + str(time.time() - start_time))
+                        return center[0], center[1]
+        return -1, -1
 

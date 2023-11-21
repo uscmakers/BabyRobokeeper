@@ -1,6 +1,6 @@
 from path_prediction import PathPrediction
 from calibration import Calibration
-from curr_ball_tracking import BallTracking
+from img_tracking import BallTracking
 from arduino_communication import ArduinoCommunication
 
 SCREEN_WIDTH =  1920
