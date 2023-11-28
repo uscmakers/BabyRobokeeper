@@ -28,7 +28,7 @@ class BallTracking():
     def __init__(self, screen_width, screen_height):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
 
     # If we ara looking for the only thing that would have blue in it, for example
     def is_single_color(self, r, g, b):
@@ -89,6 +89,8 @@ class BallTracking():
         # Uncomment to see image
         # plt.imshow(im)
         # plt.show()
+        # print(len(im))
+        # print(len(im[0]))
         for row in range(0, self.screen_height, BALL_RADIUS):
             for col in range(0, self.screen_width, BALL_RADIUS):
                 if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]):
@@ -102,3 +104,7 @@ class BallTracking():
                         return center[0], center[1]
         return -1, -1
 
+
+# img_tracking = BallTracking(1920, 1080)
+# while True:
+#     img_tracking.get_center()

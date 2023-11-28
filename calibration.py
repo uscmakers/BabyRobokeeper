@@ -10,7 +10,7 @@ class Calibration():
     def find_transformation_matrix(self):
         A = []
         p1 = self.points
-        p2 = [[0,self.table_height/2], [-self.table_width,self.table_height/2], [0,-self.table_height/2], [-self.table_width,-self.table_height/2]]
+        p2 = [[0,self.table_width/2], [-self.table_height,self.table_width/2], [0,-self.table_width/2], [-self.table_height,-self.table_width/2]]
         for i in range(4):
             x, y = p1[i][0], p1[i][1]
             u, v = p2[i][0], p2[i][1]
@@ -24,4 +24,4 @@ class Calibration():
         return H
     
     def perform_transformation(self, p1):
-        return np.matmul(self.H, np.array([p1[0], p1[1]]))
+        return np.matmul(self.H, np.array([p1[0], p1[1], 1]))
