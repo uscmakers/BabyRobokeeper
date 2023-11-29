@@ -13,8 +13,8 @@ TABLE_HEIGHT =  815
 
 # Find all 4 corners
 # TO DO - Finding all 4 corners (Brennen)
-# setup = Setup()
-# corners = setup.find_corners()
+setup = Setup()
+corners = setup.find_corners()
 
 
 # Perform calibration
