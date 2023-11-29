@@ -27,22 +27,31 @@ img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT)
 path_prediction = PathPrediction(TABLE_WIDTH, TABLE_HEIGHT)
 # rpi_communication = ArduinoCommunication()
 prev_x, prev_y = 0,0
-
+smooth_queue = []
 prev_time = time.time()
-
+path_end = 0
 while True:
     x, y = img_tracking.get_center()
     prj = cal.perform_transformation([x,y])
     print(prj[0], prj[1])
-    path_end = path_prediction.find_path_end([prev_x, prev_y], prj)
-    if path_end == None:
-        path_end = [prj[0], prj[1]]
-    # # TO DO - smoothing (Enrique)
-    # # TO DO = get speed to see if it's worth looking at (Brennen)
-    # # path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time)
+    if path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time):
+        prev_path_end = path_end
+        path_end = path_prediction.find_path_end([prev_x, prev_y], prj)
+        if path_end == None:
+            path_end = prev_path_end
+        
+        # smooth_queue.insert(0, path_end)
+        # if len(smooth_queue) > 5:
+        #     smooth_queue = smooth_queue[:5]
+        # smooth_queue = path_prediction.exponential_smoothing(smooth_queue)
+        # path_end = smooth_queue[0]
+
+        print(path_end)
     prev_x = prj[0]
     prev_y = prj[1]
-    # # rpi_communication.send_msg(str(path_end))
-    print(path_end)
+    rpi_communication.send_msg(str(path_end))
     print('\n\n')
-    # prev_time = time.time()
+    curr_time = time.time()
+    time_passed = curr_time - prev_time
+    time.sleep(0.5 - time_passed)
+    prev_time = curr_time
