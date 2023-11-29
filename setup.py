@@ -47,8 +47,8 @@ class Setup():
             sorted_right = right[right[:,1].argsort()]
             output = np.concatenate((sorted_left, sorted_right))
 
-            cv2.imwrite('sample_img.png', im)
-            plt.imshow(im)
-            plt.show()
+            # cv2.imwrite('sample_img.png', im)
+            # plt.imshow(im)
+            # plt.show()
 
             return output
