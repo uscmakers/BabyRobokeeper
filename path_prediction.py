@@ -1,4 +1,5 @@
 ## Predict where the ball will be at by the time it arrives to the goal
+import numpy as np
 
 class PathPrediction():
     def __init__(self, table_width, table_height):
@@ -40,3 +41,7 @@ class PathPrediction():
         for i in range(1, len(smooth_queue)):
             smooth_queue[0] = alpha * smooth_queue[0] + (1-alpha)*smooth_queue[i]
         return smooth_queue
+
+    def check_speed(self, prev, curr, time):
+        distance = np.sqrt((prev[0]-curr[0])**2 + (prev[1]-curr[1])**2)
+        return ((distance/time) > 0.1)
