@@ -100,7 +100,7 @@ class BallTracking():
                     left = max(0, col - BALL_RADIUS*4)
                     bfs_true, center = self.bfs(im, row, col)
                     if bfs_true:
-                        print("Center of ball found at pos (" + str(center[0]) + ", " + str(center[1]) + ")\n\n")
+                        print("Center of ball found at pos (" + str(center[0]) + ", " + str(center[1]) + ")")
                         return center[0], center[1]
         return -1, -1
 

@@ -13,13 +13,13 @@ TABLE_HEIGHT =  815
 
 # Find all 4 corners
 # TO DO - Finding all 4 corners (Brennen)
-setup = Setup()
-corners = setup.find_corners()
+# setup = Setup()
+# corners = setup.find_corners()
 
 
 # Perform calibration
 # cal = Calibration(corners[1], corners[0], corners[2], corners[3], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
-cal = Calibration([1594,160], [290,205], [1580,920], [332,937], TABLE_WIDTH, TABLE_HEIGHT)
+cal = Calibration([1656,132], [255,143], [1602,920], [313,920], TABLE_WIDTH, TABLE_HEIGHT)
 cal.find_transformation_matrix()
 
 # While loop: Get pixel value, track path, send value through serial
@@ -35,11 +35,14 @@ while True:
     prj = cal.perform_transformation([x,y])
     print(prj[0], prj[1])
     path_end = path_prediction.find_path_end([prev_x, prev_y], prj)
-    # TO DO - smoothing (Enrique)
-    # TO DO = get speed to see if it's worth looking at (Brennen)
-    # path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time)
+    if path_end == None:
+        path_end = [prj[0], prj[1]]
+    # # TO DO - smoothing (Enrique)
+    # # TO DO = get speed to see if it's worth looking at (Brennen)
+    # # path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time)
     prev_x = prj[0]
     prev_y = prj[1]
-    # rpi_communication.send_msg(str(path_end))
-    # print(path_end)
-    prev_time = time.time()
+    # # rpi_communication.send_msg(str(path_end))
+    print(path_end)
+    print('\n\n')
+    # prev_time = time.time()
