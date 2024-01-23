@@ -16,10 +16,10 @@ DISTINCTIVE_BLUE = False
 COLOR_LEEWAY = 50
 RED_LEEWAY = COLOR_LEEWAY
 GREEN_LEEWAY = COLOR_LEEWAY
-BLUE_LEEWAY = COLOR_LEEWAY
+BLUE_LEEWAY = 70
 
-BALL_R = 230
-BALL_G = 130
+BALL_R = 200
+BALL_G = 80
 BALL_B = 50
 
 
@@ -28,7 +28,7 @@ class BallTracking():
     def __init__(self, screen_width, screen_height):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.cap = cv2.VideoCapture(1, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
+        self.cap = cv2.VideoCapture(0, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
 
     # If we ara looking for the only thing that would have blue in it, for example
     def is_single_color(self, r, g, b):
@@ -76,9 +76,9 @@ class BallTracking():
                     visited[new_row][new_col] = True
                     total_pixels += 1
 
-            if total_pixels > 3*BALL_RADIUS and max_right[1]-max_left[1] >= BALL_RADIUS*2/3 and max_down[0]-max_up[0] >= BALL_RADIUS*2/3:
-                center = (max_left[1] + BALL_RADIUS, max_up[0] + BALL_RADIUS)
-                return True, center
+        if total_pixels > 3*BALL_RADIUS and max_right[1]-max_left[1] >= BALL_RADIUS*2/3 and max_down[0]-max_up[0] >= BALL_RADIUS*2/3:
+            center = (max_left[1] + BALL_RADIUS, max_up[0] + BALL_RADIUS)
+            return True, center
         return False, (-1, -1)
 
 
