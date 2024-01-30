@@ -5,25 +5,26 @@ from arduino_communication import ArduinoCommunication
 from setup import Setup
 import time
 
-SCREEN_WIDTH =  1920
-SCREEN_HEIGHT =  1080
+SCREEN_WIDTH =  1280
+SCREEN_HEIGHT =  720
 
 TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
 
 # Find all 4 corners
 setup = Setup()
-corners = setup.detect_aruco_markers()
-print("CORNERS", corners)
+# corners = setup.detect_aruco_markers()
+# print("CORNERS", corners)
 
 # Perform calibration
-cal = Calibration(corners[1], corners[0], corners[2], corners[3], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
-print("CORNERS", corners[1], corners[0], corners[2], corners[3])
-cal = Calibration([1583,138], [265,130], [1582,945], [270,945], TABLE_WIDTH, TABLE_HEIGHT)
+# cal = Calibration(corners[1], corners[0], corners[2], corners[3], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
+# print("CORNERS", corners[1], corners[0], corners[2], corners[3])
+cal = Calibration([1058,122], [207,90], [1043,644], [183,615], TABLE_WIDTH, TABLE_HEIGHT)
 cal.find_transformation_matrix()
 
 # While loop: Get pixel value, track path, send value through serial
-img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT)
+img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, False)
+
 path_prediction = PathPrediction(TABLE_WIDTH, TABLE_HEIGHT)
 rpi_communication = ArduinoCommunication()
 prev_x, prev_y = 0,0
@@ -32,10 +33,16 @@ prev_time = time.time()
 path_end = 0
 print('Starting tracking...')
 while True:
+    time1 = time.time()
     x, y = img_tracking.get_center()
+    time1_time = time.time() - time1
+
+    time2 = time.time()
     prj = cal.perform_transformation([x,y])
+    time2_time = time.time() - time2
+
     print('Coordinates: ', prj[0], prj[1])
-    if path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time):
+    if path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time ) and x != -1:
         prev_path_end = path_end
         path_end = path_prediction.find_path_end([prev_x, prev_y], prj)
         if path_end == None:
@@ -53,7 +60,7 @@ while True:
     prev_y = prj[1]
     curr_time = time.time()
     time_passed = curr_time - prev_time
-    if 0.35 - time_passed >= 0:
-        time.sleep(0.35 - time_passed)
+    # if 0.35 - time_passed >= 0:
+    #     time.sleep(0.35 - time_passed)
     prev_time = curr_time
     print('\n\n')

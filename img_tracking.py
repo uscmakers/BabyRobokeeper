@@ -5,7 +5,7 @@ from collections import deque
 
 # Approximate radius of ball in relation to the above dimensions
 # Maybe calculate using formula later
-BALL_RADIUS = 23
+BALL_RADIUS = 19
 
 # for the func is_single_color(r, g, b), so that you only have to change it here
 DISTINCTIVE_RED = False
@@ -14,21 +14,25 @@ DISTINCTIVE_BLUE = False
 
 # for the func is_color_rgb(r, g, b), the target color and the amount of wiggle room the color match will have
 COLOR_LEEWAY = 50
-RED_LEEWAY = COLOR_LEEWAY
-GREEN_LEEWAY = COLOR_LEEWAY
-BLUE_LEEWAY = 70
+RED_LEEWAY = 50
+GREEN_LEEWAY = 50
+BLUE_LEEWAY = 40
 
-BALL_R = 200
-BALL_G = 80
-BALL_B = 50
+BALL_R = 230
+BALL_G = 140
+BALL_B = 40
 
 
 class BallTracking():
 
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height, is_video, video_link = ""):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.cap = cv2.VideoCapture(0, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
+        self.cap = None
+        if is_video:
+            self.cap = cv2.VideoCapture("videos/" + str(video_link))
+        else:
+            self.cap = cv2.VideoCapture(0, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
 
     # If we ara looking for the only thing that would have blue in it, for example
     def is_single_color(self, r, g, b):
@@ -85,12 +89,11 @@ class BallTracking():
 
 
     def get_center(self):        
+        # Read in a frame
         ret, im = self.cap.read()
-        # Uncomment to see image
-        # plt.imshow(im)
-        # plt.show()
-        # print(len(im))
-        # print(len(im[0]))
+        # 
+        print(len(im))
+        print(len(im[0]))
         for row in range(0, self.screen_height, BALL_RADIUS):
             for col in range(0, self.screen_width, BALL_RADIUS):
                 if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]):
@@ -101,10 +104,17 @@ class BallTracking():
                     bfs_true, center = self.bfs(im, row, col)
                     if bfs_true:
                         print("Center of ball found at pos (" + str(center[0]) + ", " + str(center[1]) + ")")
+                        # Uncomment to see image
+                        plt.imshow(im)
+                        plt.show()
+
                         return center[0], center[1]
+        # Uncomment to see image
+        plt.imshow(im)
+        plt.show()
         return -1, -1
 
 
-# img_tracking = BallTracking(1920, 1080)
+# img_tracking = BallTracking(1280, 720, False)
 # while True:
 #     img_tracking.get_center()
