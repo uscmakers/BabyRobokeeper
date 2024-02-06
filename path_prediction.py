@@ -14,11 +14,13 @@ class PathPrediction():
         y2 = p2[1]
         m = (y2-y1)/(x2-x1)
         loops = 0
+        if x2 < x1:
+            return [-1,-1]
         while True:
             loops += 1
             path_end = self.find_y_intercept(x1, y1, m)
             if loops > 5:
-                return None
+                return [-1,-1]
             elif path_end > self.table_height/2 or path_end < -self.table_height/2:
                 self.calculate_new_path(x1, y1, m)
             else:
