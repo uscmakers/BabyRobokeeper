@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 import cv2.aruco as aruco
-from matplotlib import pyplot as plt
 
 
 class Setup():

@@ -15,12 +15,12 @@ class PathPrediction():
         m = (y2-y1)/(x2-x1)
         loops = 0
         if x2 < x1:
-            return -1
+            return float("-inf")
         while True:
             loops += 1
             path_end = self.find_y_intercept(x1, y1, m)
             if loops > 5:
-                return -1
+                return float("-inf")
             elif path_end > self.table_height/2 or path_end < -self.table_height/2:
                 self.calculate_new_path(x1, y1, m)
             else:
@@ -46,4 +46,4 @@ class PathPrediction():
 
     def check_speed(self, prev, curr, time):
         distance = np.sqrt((prev[0]-curr[0])**2 + (prev[1]-curr[1])**2)
-        return ((distance/time) > 10)
+        return ((distance/time) > 1)

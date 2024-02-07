@@ -110,7 +110,7 @@ class BallTracking():
         # print(len(im[0]))
         for row in range(0, self.screen_height, BALL_RADIUS):
             for col in range(0, self.screen_width, BALL_RADIUS):
-                if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]):
+                if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]): 
                     top = max(0, row-BALL_RADIUS*4)
                     bottom = min(self.screen_height, row+BALL_RADIUS*4)
                     right = min(self.screen_width, col + BALL_RADIUS*4)
@@ -127,6 +127,9 @@ class BallTracking():
         # plt.imshow(im)
         # plt.show()
         return -1, -1
+
+
+
 
 
 # img_tracking = BallTracking(1280, 720, (205, 105, 63), (50, 30, 37), 17, True, "T1.mov")
