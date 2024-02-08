@@ -108,8 +108,8 @@ class BallTracking():
         # 
         # print(len(im))
         # print(len(im[0]))
-        for row in range(0, self.screen_height, BALL_RADIUS):
-            for col in range(0, self.screen_width, BALL_RADIUS):
+        for row in range(0, self.screen_height, int(BALL_RADIUS/2)):
+            for col in range(0, self.screen_width, int(BALL_RADIUS/2)):
                 if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]): 
                     top = max(0, row-BALL_RADIUS*4)
                     bottom = min(self.screen_height, row+BALL_RADIUS*4)
@@ -117,7 +117,7 @@ class BallTracking():
                     left = max(0, col - BALL_RADIUS*4)
                     bfs_true, center = self.bfs(im, row, col)
                     if bfs_true:
-                        print("Center of ball found at pos (" + str(center[0]) + ", " + str(center[1]) + ")")
+                        # print("Center (" + str(center[0]) + ", " + str(center[1]) + ")")
                         # Uncomment to see image
                         plt.imshow(im)
                         plt.show()

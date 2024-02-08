@@ -60,6 +60,7 @@ prev_time = time.time()
 path_end = 0
 print('Starting tracking...')
 # rpi_communication.send_msg(str(-999))
+first_time = True
 while True:
     time1 = time.time()
     x, y = img_tracking.get_center()
@@ -87,7 +88,11 @@ while True:
                 # path_end = smooth_queue[0]
                 # print("Path end:", path_end)
             else:
-                print("SENT: " + str(path_end))
+                if first_time:
+                    print("Throwing out initial prediction:", path_end)
+                    first_time = False
+                else:
+                    print("SENT: " + str(path_end))
                 # rpi_communication.send_msg(str(path_end))
 
 
