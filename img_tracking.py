@@ -3,28 +3,6 @@ from matplotlib import pyplot as plt
 import time
 from collections import deque
 
-# Approximate radius of ball in relation to the above dimensions
-# Maybe calculate using formula later
-BALL_RADIUS = 18
-
-# for the func is_single_color(r, g, b), so that you only have to change it here
-# DISTINCTIVE_RED = False
-# DISTINCTIVE_GREEN = True
-# DISTINCTIVE_BLUE = False
-
-# for the func is_color_rgb(r, g, b), the target color and the amount of wiggle room the color match will have
-# COLOR_LEEWAY = 175
-
-
-RED_LEEWAY = 40
-GREEN_LEEWAY = 20
-BLUE_LEEWAY = 20
-
-BALL_R = 175
-BALL_G = 80
-BALL_B = 40
-
-
 class BallTracking():
 
     def __init__(self, screen_width, screen_height, color, color_leeway, radius, is_video, video_link = ""):
@@ -32,25 +10,25 @@ class BallTracking():
         self.screen_height = screen_height
         self.cap = None
 
+        self.ball_r = color[0]
+        self.ball_g = color[1]
+        self.ball_b = color[2]
+
+        self.red_leeway = color_leeway[0]
+        self.green_leeway = color_leeway[1]
+        self.blue_leeway = color_leeway[2]
+
+        self.ball_radius = radius
+
         if is_video:
-            BALL_R = color[0]
-            BALL_G = color[1]
-            BALL_B = color[2]
-
-            RED_LEEWAY = color_leeway[0]
-            GREEN_LEEWAY = color_leeway[1]
-            BLUE_LEEWAY = color_leeway[2]
-
-            BALL_RADIUS = radius
-
-            self.cap = cv2.VideoCapture("videos/" + str(video_link))
+            self.cap = cv2.VideoCapture(str(video_link))
 
         else:
             self.cap = cv2.VideoCapture(0, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
 
     # If we ara looking for the only thing that would have blue in it, for example
     def is_single_color(self, r, g, b):
-        if abs(BALL_R - r) <= RED_LEEWAY and abs(BALL_G - g) <= GREEN_LEEWAY and abs(BALL_B - b) <= BLUE_LEEWAY:
+        if abs(self.ball_r - r) <= self.red_leeway and abs(self.ball_g - g) <= self.green_leeway and abs(self.ball_b - b) <= self.blue_leeway:
             return True
         return False
 
@@ -94,13 +72,10 @@ class BallTracking():
                     visited[new_row][new_col] = True
                     total_pixels += 1
 
-        if total_pixels > 3*BALL_RADIUS and max_right[1]-max_left[1] >= BALL_RADIUS*2/3 and max_down[0]-max_up[0] >= BALL_RADIUS*2/3:
-            center = (max_left[1] + BALL_RADIUS, max_up[0] + BALL_RADIUS)
+        if total_pixels > 3*self.ball_radius and max_right[1]-max_left[1] >= self.ball_radius*2/3 and max_down[0]-max_up[0] >= self.ball_radius*2/3:
+            center = (max_left[1] + self.ball_radius, max_up[0] + self.ball_radius)
             return True, center
         return False, (-1, -1)
-
-
-
 
     def get_center(self):        
         # Read in a frame
@@ -108,13 +83,13 @@ class BallTracking():
         # 
         # print(len(im))
         # print(len(im[0]))
-        for row in range(0, self.screen_height, int(BALL_RADIUS/2)):
-            for col in range(0, self.screen_width, int(BALL_RADIUS/2)):
+        for row in range(0, self.screen_height, int(self.ball_radius/2)):
+            for col in range(0, self.screen_width, int(self.ball_radius/2)):
                 if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]): 
-                    top = max(0, row-BALL_RADIUS*4)
-                    bottom = min(self.screen_height, row+BALL_RADIUS*4)
-                    right = min(self.screen_width, col + BALL_RADIUS*4)
-                    left = max(0, col - BALL_RADIUS*4)
+                    top = max(0, row-self.ball_radius*4)
+                    bottom = min(self.screen_height, row+self.ball_radius*4)
+                    right = min(self.screen_width, col + self.ball_radius*4)
+                    left = max(0, col - self.ball_radius*4)
                     bfs_true, center = self.bfs(im, row, col)
                     if bfs_true:
                         # print("Center (" + str(center[0]) + ", " + str(center[1]) + ")")
@@ -127,11 +102,3 @@ class BallTracking():
         # plt.imshow(im)
         # plt.show()
         return -1, -1
-
-
-
-
-
-# img_tracking = BallTracking(1280, 720, (205, 105, 63), (50, 30, 37), 17, True, "T1.mov")
-# while True:
-#     img_tracking.get_center()

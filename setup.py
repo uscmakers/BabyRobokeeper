@@ -6,7 +6,7 @@ import cv2.aruco as aruco
 class Setup():
     def __init__(self, screen_width, screen_height, is_video, video_link = ""):
         if is_video:
-            self.cap = cv2.VideoCapture("videos/" + str(video_link))
+            self.cap = cv2.VideoCapture(str(video_link))
         else:
             self.cap = cv2.VideoCapture(0, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
 
