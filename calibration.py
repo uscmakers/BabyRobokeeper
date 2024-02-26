@@ -5,9 +5,7 @@ class Calibration():
         self.points = [tr, tl, br, bl]
         self.table_width = table_width
         self.table_height = table_height
-        self.H = []
 
-    def find_transformation_matrix(self):
         A = []
         p1 = self.points
         p2 = [[0,self.table_width/2], [-self.table_height,self.table_width/2], [0,-self.table_width/2], [-self.table_height,-self.table_width/2]]
@@ -21,10 +19,15 @@ class Calibration():
         L = Vh[-1, :] / Vh[-1, -1]
         H = L.reshape(3, 3)
         self.H = H
-        return H
+
+    def get_transformation_matrix(self):
+        return self.H
+    
+    def get_inverse_transformation_matrix(self):
+        return np.linalg.inv(self.H)
     
     def perform_transformation(self, p1):
-        return np.matmul(self.H, np.array([p1[0], p1[1], 1]))
+        return np.matmul(self.H, np.array([p1[0], p1[1], 1]))[:2]
     
     def perform_inverse_transformation(self, d1):
-        return np.matmul(np.linalg.inv(self.H), np.array([0, d1, 1]))[1]
+        return np.matmul(np.linalg.inv(self.H), np.array([0, d1, 1]))[:2]

@@ -4,7 +4,11 @@ import cv2.aruco as aruco
 
 
 class Setup():
-    def __init__(self, screen_width, screen_height, is_video, video_link = ""):
+    def __init__(self, screen_width, screen_height, table_width, table_height, is_video, video_link = ""):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.table_width = table_width
+        self.table_height = table_height
         if is_video:
             self.cap = cv2.VideoCapture(str(video_link))
         else:
@@ -30,3 +34,13 @@ class Setup():
         sorted_centers = points[points[:,2].argsort()]
 
         return sorted_centers
+    
+    def find_color(self, cal):
+        # Get coordinates of middle of table
+        middle = [0, -self.table_width/2]
+        pixel = cal.perform_inverse_transform(middle)
+
+        # Get color of that pixel
+        ret, im = self.cap.read()
+        b, g, r = int(im[pixel[0], pixel[1]])
+        return [b, g, r]

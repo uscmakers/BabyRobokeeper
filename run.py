@@ -18,26 +18,24 @@ USING_VIDEO = True
 VIDEO_NAME = "videos/T8.mov"
 
 # Find all 4 corners
-setup = Setup(SCREEN_WIDTH, SCREEN_HEIGHT, USING_VIDEO, VIDEO_NAME)
+setup = Setup(SCREEN_WIDTH, SCREEN_HEIGHT, TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
 corners = setup.detect_aruco_markers()
 
 # Perform calibration
 cal = Calibration(corners[0], corners[1], corners[2], corners[3], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
 if DEBUG:
     print('Corners')
-cal.find_transformation_matrix()
 
-# TO DO: Find color of ball automatically (to be added in Setup)
+# Find color of ball automatically (to be added in Setup)
 # Instructions: Place the ball in the middle of the table when code is run
-# Output: color, ball_radius
-color = (1,1,1)
-color_leeway = (1,1,1)
-ball_radius = 1
+# Output: color
+color = setup.find_color(cal)  # This is assuming that we have no-glare paint, so the whole ball is basically the same color
+color_leeway = (1,1,1)  # Hard-coded based on testing
+ball_radius = 1  # Hard-coded based on testing (fixture leaves it set)
 
-# While loop: Get pixel value, track path, send value through serial
 img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, True, VIDEO_NAME)
-
 path_prediction = PathPrediction(TABLE_WIDTH, TABLE_HEIGHT)
+
 if not DEBUG:
     rpi_communication = ArduinoCommunication()
 
@@ -47,18 +45,18 @@ path_end = 0
 if not DEBUG:
     rpi_communication.send_msg(str(0))
 
+# While loop: Get pixel value, track path, send value through serial
 while True:
     x, y = img_tracking.get_center()
     
     if x != -1:
         prj = cal.perform_transformation([x,y])
 
-        if path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time ):
+        if path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time):
             prev_path_end = copy.deepcopy(path_end)
             path_end = path_prediction.find_path_end([prev_x, prev_y], prj)
             if path_end == float("-inf"):
                 path_end = prev_path_end
-
             else:
                 if not DEBUG:
                     rpi_communication.send_msg(str(path_end))
