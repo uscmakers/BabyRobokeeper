@@ -102,3 +102,14 @@ class BallTracking():
         # plt.imshow(im)
         # plt.show()
         return -1, -1
+
+
+
+# color = (208, 125, 70)
+# color_leeway = (47, 30, 30)
+# resolution = (1439, 1079)
+# ball_radius = 17
+
+# img_tracking = BallTracking(1439, 1079, color, color_leeway, ball_radius, False, "video_name")
+# while True:
+#     img_tracking.get_center()
