@@ -24,7 +24,7 @@ class BallTracking():
             self.cap = cv2.VideoCapture(str(video_link))
 
         else:
-            self.cap = cv2.VideoCapture(0, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
+            self.cap = cv2.VideoCapture(0)
 
     # If we ara looking for the only thing that would have blue in it, for example
     def is_single_color(self, r, g, b):
@@ -92,7 +92,7 @@ class BallTracking():
                     left = max(0, col - self.ball_radius*4)
                     bfs_true, center = self.bfs(im, row, col)
                     if bfs_true:
-                        # print("Center (" + str(center[0]) + ", " + str(center[1]) + ")")
+                        print("Center (" + str(center[0]) + ", " + str(center[1]) + ")")
                         # Uncomment to see image
                         plt.imshow(im)
                         plt.show()
@@ -105,11 +105,21 @@ class BallTracking():
 
 
 
-# color = (208, 125, 70)
-# color_leeway = (47, 30, 30)
-# resolution = (1439, 1079)
-# ball_radius = 17
 
-# img_tracking = BallTracking(1439, 1079, color, color_leeway, ball_radius, False, "video_name")
-# while True:
-#     img_tracking.get_center()
+highest_red = 255
+lowest_red = 160
+
+highest_green = 170
+lowest_green = 80
+
+highest_blue = 110
+lowest_blue = 50
+
+color = (int((highest_red+lowest_red)/2), int((highest_green+lowest_green)/2), int((highest_blue+lowest_blue)/2))
+color_leeway = (highest_red - color[0], highest_green - color[1], highest_blue - color[2])
+resolution = (1920, 1080)
+ball_radius = 26
+
+img_tracking = BallTracking(resolution[0], resolution[1], color, color_leeway, ball_radius, False, "video_name")
+while True:
+    img_tracking.get_center()
