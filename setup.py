@@ -38,7 +38,7 @@ class Setup():
     def find_color(self, cal):
         # Get coordinates of middle of table
         middle = [0, -self.table_width/2]
-        pixel = cal.perform_inverse_transform(middle)
+        pixel = cal.perform_inverse_transformation(middle)
 
         # Get color of that pixel
         ret, im = self.cap.read()

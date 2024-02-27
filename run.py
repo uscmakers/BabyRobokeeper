@@ -14,7 +14,7 @@ SCREEN_HEIGHT =  720
 TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
 
-USING_VIDEO = True
+USING_VIDEO = False
 VIDEO_NAME = "videos/T8.mov"
 
 # Find all 4 corners

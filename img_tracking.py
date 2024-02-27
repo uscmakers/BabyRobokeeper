@@ -120,6 +120,6 @@ color_leeway = (highest_red - color[0], highest_green - color[1], highest_blue -
 resolution = (1920, 1080)
 ball_radius = 26
 
-img_tracking = BallTracking(resolution[0], resolution[1], color, color_leeway, ball_radius, False, "video_name")
-while True:
-    img_tracking.get_center()
+# img_tracking = BallTracking(resolution[0], resolution[1], color, color_leeway, ball_radius, False, "video_name")
+# while True:
+#     img_tracking.get_center()
