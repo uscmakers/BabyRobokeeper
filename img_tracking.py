@@ -94,8 +94,8 @@ class BallTracking():
                     if bfs_true:
                         print("Center (" + str(center[0]) + ", " + str(center[1]) + ")")
                         # Uncomment to see image
-                        plt.imshow(im)
-                        plt.show()
+                        # plt.imshow(im)
+                        # plt.show()
 
                         return center[0], center[1]
         # Uncomment to see image
@@ -109,11 +109,11 @@ class BallTracking():
 highest_red = 255
 lowest_red = 160
 
-highest_green = 170
+highest_green = 150
 lowest_green = 80
 
 highest_blue = 110
-lowest_blue = 50
+lowest_blue = 39
 
 color = (int((highest_red+lowest_red)/2), int((highest_green+lowest_green)/2), int((highest_blue+lowest_blue)/2))
 color_leeway = (highest_red - color[0], highest_green - color[1], highest_blue - color[2])
@@ -122,6 +122,6 @@ print(color_leeway)
 resolution = (1920, 1080)
 ball_radius = 26
 
-img_tracking = BallTracking(resolution[0], resolution[1], color, color_leeway, ball_radius, False, "video_name")
-while True:
-    img_tracking.get_center()
+# img_tracking = BallTracking(resolution[0], resolution[1], color, color_leeway, ball_radius, False, "video_name")
+# while True:
+#     img_tracking.get_center()

@@ -8,10 +8,10 @@ import copy
 
 DEBUG = True
 
-MANUAL = False
+MANUAL = True
 
-SCREEN_WIDTH =  1280
-SCREEN_HEIGHT =  720
+SCREEN_WIDTH =  1920
+SCREEN_HEIGHT =  1080
 
 TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
@@ -43,19 +43,19 @@ if MANUAL:
     highest_red = 255
     lowest_red = 160
 
-    highest_green = 170
+    highest_green = 150
     lowest_green = 80
 
     highest_blue = 110
-    lowest_blue = 50
+    lowest_blue = 39
 
     color = (int((highest_red+lowest_red)/2), int((highest_green+lowest_green)/2), int((highest_blue+lowest_blue)/2))
     color_leeway = (highest_red - color[0], highest_green - color[1], highest_blue - color[2])
-    resolution = (1920, 1080)
+    print(color)
+    print(color_leeway)
     ball_radius = 26
 
-
-img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, True, VIDEO_NAME)
+img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, False, "video_name")
 path_prediction = PathPrediction(TABLE_WIDTH, TABLE_HEIGHT)
 
 if not DEBUG:
@@ -69,6 +69,7 @@ if not DEBUG:
 
 # While loop: Get pixel value, track path, send value through serial
 while True:
+
     x, y = img_tracking.get_center()
     
     if x != -1:
@@ -88,6 +89,6 @@ while True:
         
         curr_time = time.time()
         time_passed = curr_time - prev_time
-        if 0.1 - time_passed >= 0:
-            time.sleep(0.1 - time_passed)
+        # if 0.1 - time_passed >= 0:
+        #     time.sleep(0.1 - time_passed)
         prev_time = curr_time

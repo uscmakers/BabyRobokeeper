@@ -13,7 +13,7 @@ class Setup():
         if is_video:
             self.cap = cv2.VideoCapture(str(video_link))
         else:
-            self.cap = cv2.VideoCapture(1, apiPreference=cv2.CAP_ANY, params=[cv2.CAP_PROP_FRAME_WIDTH, screen_width, cv2.CAP_PROP_FRAME_HEIGHT, screen_height])
+            self.cap = cv2.VideoCapture(0)
 
 
     def detect_aruco_markers(self):
@@ -34,6 +34,7 @@ class Setup():
                 points.append((point_x, point_y, ids[i][0]))
 
         points = np.array(points)
+        print("Points: ",  points)
         sorted_centers = points[points[:,2].argsort()]
 
         return sorted_centers
@@ -50,8 +51,8 @@ class Setup():
         # Get color of that pixel
         ret, im = self.cap.read()
         print(im[pixel[0],pixel[1]])  # This value is not correct (color of middle of table is incorrect)
-        plt.imshow(im)
-        plt.show()
+        # plt.imshow(im)
+        # plt.show()
         b, g, r = im[pixel[0],pixel[1]]
         return [b, g, r]
     
