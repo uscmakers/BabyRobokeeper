@@ -67,8 +67,16 @@ path_end = 0
 if not DEBUG:
     rpi_communication.send_msg(str(0))
 
+time_since_send = 0
 # While loop: Get pixel value, track path, send value through serial
 while True:
+
+    if ((time_since_send != 0) and (time.time() - time_since_send > 1.5)):
+        if DEBUG:
+            print("Resetting to middle")
+        time_since_send = 0
+        if not DEBUG:
+            rpi_communication.send_msg(str(0))
 
     x, y = img_tracking.get_center()
     
@@ -81,7 +89,9 @@ while True:
             if path_end == float("-inf"):
                 path_end = prev_path_end
             else:
-                print("PATH END: ", str(path_end))
+                if DEBUG:
+                    print("PATH END: ", str(path_end))
+                time_since_send = time.time()
                 if not DEBUG:
                     rpi_communication.send_msg(str(path_end))
 
@@ -93,3 +103,4 @@ while True:
         if 0.1 - time_passed >= 0:
             time.sleep(0.1 - time_passed)
         prev_time = curr_time
+
