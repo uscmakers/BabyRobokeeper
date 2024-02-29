@@ -20,18 +20,20 @@ VIDEO_NAME = "videos/T8.mov"
 # Find all 4 corners
 setup = Setup(SCREEN_WIDTH, SCREEN_HEIGHT, TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
 corners = setup.detect_aruco_markers()
+if DEBUG:
+    print(corners)
 
 # Perform calibration
 cal = Calibration(corners[0], corners[1], corners[2], corners[3], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
-if DEBUG:
-    print('Corners')
 
 # Find color of ball automatically (to be added in Setup)
 # Instructions: Place the ball in the middle of the table when code is run
 # Output: color
 color = setup.find_color(cal)  # This is assuming that we have no-glare paint, so the whole ball is basically the same color
+if DEBUG:
+    print(color)
 color_leeway = (1,1,1)  # Hard-coded based on testing
-ball_radius = 1  # Hard-coded based on testing (fixture leaves it set)
+ball_radius = 10  # Hard-coded based on testing (fixture leaves it set)
 
 img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, True, VIDEO_NAME)
 path_prediction = PathPrediction(TABLE_WIDTH, TABLE_HEIGHT)

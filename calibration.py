@@ -8,7 +8,7 @@ class Calibration():
 
         A = []
         p1 = self.points
-        p2 = [[0,self.table_width/2], [-self.table_height,self.table_width/2], [0,-self.table_width/2], [-self.table_height,-self.table_width/2]]
+        p2 = [[0,-self.table_width/2], [-self.table_height,-self.table_width/2], [-self.table_height,self.table_width/2], [0,self.table_width/2]]
         for i in range(4):
             x, y = p1[i][0], p1[i][1]
             u, v = p2[i][0], p2[i][1]
@@ -30,4 +30,4 @@ class Calibration():
         return np.matmul(self.H, np.array([p1[0], p1[1], 1]))[:2]
     
     def perform_inverse_transformation(self, d1):
-        return np.matmul(np.linalg.inv(self.H), np.array([0, d1, 1]))[:2]
+        return np.matmul(np.linalg.inv(self.H), np.array([d1[0], d1[1], 1]))[:2]
