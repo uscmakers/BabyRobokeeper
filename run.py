@@ -8,6 +8,8 @@ import copy
 
 DEBUG = True
 
+MANUAL = False
+
 SCREEN_WIDTH =  1280
 SCREEN_HEIGHT =  720
 
@@ -26,6 +28,8 @@ if DEBUG:
 # Perform calibration
 cal = Calibration(corners[0], corners[1], corners[2], corners[3], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
 
+
+
 # Find color of ball automatically (to be added in Setup)
 # Instructions: Place the ball in the middle of the table when code is run
 # Output: color
@@ -34,6 +38,22 @@ if DEBUG:
     print(color)
 color_leeway = (1,1,1)  # Hard-coded based on testing
 ball_radius = 10  # Hard-coded based on testing (fixture leaves it set)
+
+if MANUAL:
+    highest_red = 255
+    lowest_red = 160
+
+    highest_green = 170
+    lowest_green = 80
+
+    highest_blue = 110
+    lowest_blue = 50
+
+    color = (int((highest_red+lowest_red)/2), int((highest_green+lowest_green)/2), int((highest_blue+lowest_blue)/2))
+    color_leeway = (highest_red - color[0], highest_green - color[1], highest_blue - color[2])
+    resolution = (1920, 1080)
+    ball_radius = 26
+
 
 img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, True, VIDEO_NAME)
 path_prediction = PathPrediction(TABLE_WIDTH, TABLE_HEIGHT)
