@@ -92,7 +92,7 @@ class BallTracking():
                     left = max(0, col - self.ball_radius*4)
                     bfs_true, center = self.bfs(im, row, col)
                     if bfs_true:
-                        print("Center (" + str(center[0]) + ", " + str(center[1]) + ")")
+                        # print("Center (" + str(center[0]) + ", " + str(center[1]) + ")")
                         # Uncomment to see image
                         # plt.imshow(im)
                         # plt.show()

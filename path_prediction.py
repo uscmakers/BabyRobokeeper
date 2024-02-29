@@ -46,4 +46,4 @@ class PathPrediction():
 
     def check_speed(self, prev, curr, time):
         distance = np.sqrt((prev[0]-curr[0])**2 + (prev[1]-curr[1])**2)
-        return ((distance/time) > 1)
+        return ((distance/time) > 100)

@@ -6,7 +6,7 @@ from setup import Setup
 import time
 import copy
 
-DEBUG = True
+DEBUG = False
 
 MANUAL = True
 
@@ -26,7 +26,7 @@ if DEBUG:
     print(corners)
 
 # Perform calibration
-cal = Calibration(corners[0], corners[1], corners[2], corners[3], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
+cal = Calibration(corners[1], corners[0], corners[3], corners[2], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
 
 
 
@@ -81,6 +81,7 @@ while True:
             if path_end == float("-inf"):
                 path_end = prev_path_end
             else:
+                print("PATH END: ", str(path_end))
                 if not DEBUG:
                     rpi_communication.send_msg(str(path_end))
 
@@ -89,6 +90,6 @@ while True:
         
         curr_time = time.time()
         time_passed = curr_time - prev_time
-        # if 0.1 - time_passed >= 0:
-        #     time.sleep(0.1 - time_passed)
+        if 0.1 - time_passed >= 0:
+            time.sleep(0.1 - time_passed)
         prev_time = curr_time

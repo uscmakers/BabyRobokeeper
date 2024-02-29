@@ -2,7 +2,7 @@ import serial
 
 class ArduinoCommunication():
     def __init__(self):
-        self.ser = serial.Serial("/dev/cu.usbmodem1301", 9600, timeout=1)
+        self.ser = serial.Serial("/dev/cu.usbmodem21301", 9600, timeout=1)
         self.ser.reset_input_buffer()
 
     def send_msg(self,msg):
