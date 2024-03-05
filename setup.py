@@ -46,13 +46,18 @@ class Setup():
         middle = [-self.table_height/2, 0]
         pixel = cal.perform_inverse_transformation(middle)
         pixel = [int(pix) for pix in pixel]
-        print(pixel)   # This value is correct (coordinate of the middle of table is correct)
+        red_vals = []
+        green_vals = []
+        blue_vals = []
+        for i in range(-1,2):
+            for j in range(-1, 2):
+                red_vals.append(im[pixel+i][pixel+j][0])
+                green_vals.append(im[pixel+i][pixel+j][1])
+                blue_vals.append(im[pixel+i][pixel+j][2])
 
         # Get color of that pixel
-        ret, im = self.cap.read()
-        print(im[pixel[0],pixel[1]])  # This value is not correct (color of middle of table is incorrect)
-        # plt.imshow(im)
-        # plt.show()
-        b, g, r = im[pixel[0],pixel[1]]
-        return [b, g, r]
+        r = np.average(red_vals)
+        g = np.average(green_vals)
+        b = np.average(blue_vals)
+        return [r, g, b]
     
