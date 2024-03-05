@@ -1,55 +1,68 @@
-
+#include <Arduino.h>
 #include <Stepper.h>
-
-// Number of steps per output rotation
-const int stepsPerRevolution = 200;
-
-// Create Instance of Stepper library
-Stepper myStepper(stepsPerRevolution, 8, 9, 10, 11);
-
+// Motor steps per revolution. Most steppers are 200 steps or 1.8 degrees/step
+#define MOTOR_STEPS 200
+// Target RPM for cruise speed
+  #define RPM 1300
+// Acceleration and deceleration values are always in FULL steps / s^2
+#define MOTOR_ACCEL 16000
+#define MOTOR_DECEL 16000
+// Microstepping mode. If you hardwired it to save pins, set to the same value here.
+#define MICROSTEPS 1
+#define DIR 5
+#define STEP 6
+#include “A4988.h”
+A4988 stepper(MOTOR_STEPS, DIR, STEP);
 // Current position (measured from origin)
-double current = 182; // !!! remeasure width to make sure values are correct 
-
+double current = 182; // !!! remeasure width to make sure values are correct
 // Boundaries of the linear gantry
-double MAX = 182; //!!! what is the max positive x-coord (ask enrique)
-double MIN = -182;
-
+double MAX = 181; //!!! what is the max positive x-coord (ask enrique)
+double MIN = -181;
 // Calibration:
-double STEPS = 1218; // # steps to move across table
-double length = 364; // this is in mm (can convert to 36.4 based on Enrique's code)
-
+double STEPS = 1224; // # steps to move across table
+double length = 364; // this is in mm (can convert to 36.4 based on Enrique’s code)
 // New position to move to (measured from origin)
 double goal = 0;
-
+// Net distance to move
+double dist = 0;
 void setup() {
-  // set the speed at 300 rpm:
-  myStepper.setSpeed(300);
+  stepper.begin(RPM, MICROSTEPS);
+  // if using enable/disable on ENABLE pin (active LOW) instead of SLEEP uncomment next line
+  // stepper.setEnableActiveState(LOW);
+  stepper.enable();
+  stepper.setSpeedProfile(stepper.LINEAR_SPEED, MOTOR_ACCEL, MOTOR_DECEL);
   // initialize the serial port:
   Serial.begin(9600);
-  
+  delay(100);
 }
-
 void loop() {
   if (Serial.available() > 0){
-
-    double goal = Serial.readStringUntil('\n').toDouble();
-
-    Serial.print("RECIEVED: ");
+    while (Serial.available() > 0){
+      goal = Serial.readStringUntil(‘\n’).toDouble();
+    }
+    Serial.print(“RECIEVED: “);
     Serial.println(goal);
-    
-    // Net distance to move 
-    double dist = abs(current-goal);
-
+    // Net distance to move
+    dist = abs(current-goal);
     if (MIN <= goal && goal <= MAX){
       if (current < goal){
-        myStepper.step(-(dist*(double(STEPS)/length))); // !!!want to remeasure width
+        stepper.move(-(dist*(double(STEPS)/length))); // !!!want to remeasure width
         current += dist;
       } else if (current > goal){
-        myStepper.step((dist*(double(STEPS)/length)));
+        stepper.move((dist*(double(STEPS)/length)));
         current -= dist;
       } else {
-        myStepper.step(0);
+        stepper.move(0);
       }
     }
   }
 }
+
+
+
+
+
+
+
+
+
