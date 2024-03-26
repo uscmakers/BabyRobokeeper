@@ -6,9 +6,9 @@ from setup import Setup
 import time
 import copy
 
-DEBUG = False
+DEBUG = True
 
-MANUAL = True
+MANUAL = False
 
 SCREEN_WIDTH =  1920
 SCREEN_HEIGHT =  1080
@@ -16,8 +16,8 @@ SCREEN_HEIGHT =  1080
 TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
 
-USING_VIDEO = False
-VIDEO_NAME = "videos/T8.mov"
+USING_VIDEO = True
+VIDEO_NAME = "videos/ArucoTest2.mov"
 
 # Find all 4 corners
 setup = Setup(SCREEN_WIDTH, SCREEN_HEIGHT, TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
@@ -37,7 +37,7 @@ color = setup.find_color(cal)  # This is assuming that we have no-glare paint, s
 if DEBUG:
     print(color)
 color_leeway = (1,1,1)  # Hard-coded based on testing
-ball_radius = 10  # Hard-coded based on testing (fixture leaves it set)
+ball_radius = 26  # Hard-coded based on testing (fixture leaves it set)
 
 if MANUAL:
     highest_red = 255

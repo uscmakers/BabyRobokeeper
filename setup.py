@@ -42,6 +42,12 @@ class Setup():
     def find_color(self, cal):
         ret, im = self.cap.read()
 
+        # DEBUGGING
+        # print("Data type of pixel values:", im.dtype)
+        # print("Min pixel value:", np.min(im))
+        # print("Max pixel value:", np.max(im))
+        # print("Color space of the image before conversion:", im.shape)
+
         # Get coordinates of middle of table
         middle = [-self.table_height/2, 0]
         pixel = cal.perform_inverse_transformation(middle)
@@ -51,13 +57,19 @@ class Setup():
         blue_vals = []
         for i in range(-1,2):
             for j in range(-1, 2):
-                red_vals.append(im[pixel+i][pixel+j][0])
-                green_vals.append(im[pixel+i][pixel+j][1])
-                blue_vals.append(im[pixel+i][pixel+j][2])
+                red_vals.append(im[pixel[1]+i][pixel[0]+j][0])
+                green_vals.append(im[pixel[1]+i][pixel[0]+j][1])
+                blue_vals.append(im[pixel[1]+i][pixel[0]+j][2])
 
         # Get color of that pixel
         r = np.average(red_vals)
         g = np.average(green_vals)
         b = np.average(blue_vals)
+
+        # DEBUGGING
+        # print('R: ', r, 'G: ', g, 'B: ', b)
+        # plt.imshow(im)
+        # plt.show()
+
         return [r, g, b]
     
