@@ -5,7 +5,13 @@ from arduino_communication import ArduinoCommunication
 from setup import Setup
 import time
 import copy
+import cv2
+import numpy as np
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 DEBUG = True
 
 MANUAL = False
@@ -17,7 +23,28 @@ TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
 
 USING_VIDEO = True
+<<<<<<< Updated upstream
 VIDEO_NAME = "videos/ArucoTest2.mov"
+=======
+VIDEO_NAME = "videos/A1.mov"
+
+
+video_for_resolution = None
+
+if USING_VIDEO:
+    video_for_resolution = cv2.VideoCapture(VIDEO_NAME)
+
+else:
+    video_for_resolution = cv2.VideoCapture(0)
+
+ret, im = video_for_resolution.read()
+
+SCREEN_WIDTH = np.size(im, 1)
+SCREEN_HEIGHT = np.size(im, 0)
+
+print("Screen Width: ", SCREEN_WIDTH)
+print("Screen Height: ", SCREEN_HEIGHT)
+>>>>>>> Stashed changes
 
 # Find all 4 corners
 setup = Setup(SCREEN_WIDTH, SCREEN_HEIGHT, TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
@@ -36,7 +63,11 @@ cal = Calibration(corners[1], corners[0], corners[3], corners[2], TABLE_WIDTH, T
 color = setup.find_color(cal)  # This is assuming that we have no-glare paint, so the whole ball is basically the same color
 if DEBUG:
     print(color)
+<<<<<<< Updated upstream
 color_leeway = (1,1,1)  # Hard-coded based on testing
+=======
+color_leeway = (100,70,70)  # Hard-coded based on testing
+>>>>>>> Stashed changes
 ball_radius = 26  # Hard-coded based on testing (fixture leaves it set)
 
 if MANUAL:
@@ -55,7 +86,7 @@ if MANUAL:
     print(color_leeway)
     ball_radius = 26
 
-img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, False, "video_name")
+img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, USING_VIDEO, VIDEO_NAME)
 path_prediction = PathPrediction(TABLE_WIDTH, TABLE_HEIGHT)
 
 if not DEBUG:
@@ -86,8 +117,13 @@ while True:
         if path_prediction.check_speed([prev_x, prev_y], prj, time.time()-prev_time):
             prev_path_end = copy.deepcopy(path_end)
             path_end = path_prediction.find_path_end([prev_x, prev_y], prj)
+
+
             if path_end == float("-inf"):
                 path_end = prev_path_end
+            elif (path_prediction.check_outlier(path_end)):
+                if DEBUG:
+                    print("OUTLIER: ", str(path_end))
             else:
                 if DEBUG:
                     print("PATH END: ", str(path_end))

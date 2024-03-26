@@ -57,9 +57,15 @@ class Setup():
         blue_vals = []
         for i in range(-1,2):
             for j in range(-1, 2):
+<<<<<<< Updated upstream
                 red_vals.append(im[pixel[1]+i][pixel[0]+j][0])
                 green_vals.append(im[pixel[1]+i][pixel[0]+j][1])
                 blue_vals.append(im[pixel[1]+i][pixel[0]+j][2])
+=======
+                red_vals.append(im[pixel[0]+i][pixel[1]+j][0])
+                green_vals.append(im[pixel[0]+i][pixel[1]+j][1])
+                blue_vals.append(im[pixel[0]+i][pixel[1]+j][2])
+>>>>>>> Stashed changes
 
         # Get color of that pixel
         r = np.average(red_vals)
