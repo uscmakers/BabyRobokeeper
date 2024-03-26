@@ -5,15 +5,18 @@ import matplotlib.pyplot as plt
 
 
 class Setup():
-    def __init__(self, screen_width, screen_height, table_width, table_height, is_video, video_link = ""):
-        self.screen_width = screen_width
-        self.screen_height = screen_height
-        self.table_width = table_width
-        self.table_height = table_height
+    def __init__(self, table_width, table_height, is_video, video_link = ""):
         if is_video:
             self.cap = cv2.VideoCapture(str(video_link))
         else:
             self.cap = cv2.VideoCapture(0)
+
+        ret, im = self.cap.read()
+
+        self.screen_width = np.size(im, 1)
+        self.screen_height = np.size(im, 0)
+        self.table_width = table_width
+        self.table_height = table_height
 
 
     def detect_aruco_markers(self):
@@ -57,15 +60,10 @@ class Setup():
         blue_vals = []
         for i in range(-1,2):
             for j in range(-1, 2):
-<<<<<<< Updated upstream
                 red_vals.append(im[pixel[1]+i][pixel[0]+j][0])
                 green_vals.append(im[pixel[1]+i][pixel[0]+j][1])
                 blue_vals.append(im[pixel[1]+i][pixel[0]+j][2])
-=======
-                red_vals.append(im[pixel[0]+i][pixel[1]+j][0])
-                green_vals.append(im[pixel[0]+i][pixel[1]+j][1])
-                blue_vals.append(im[pixel[0]+i][pixel[1]+j][2])
->>>>>>> Stashed changes
+
 
         # Get color of that pixel
         r = np.average(red_vals)
@@ -79,3 +77,8 @@ class Setup():
 
         return [r, g, b]
     
+    def get_width(self):
+        return self.screen_width
+
+    def get_height(self):
+        return self.screen_height

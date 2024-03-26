@@ -8,10 +8,6 @@ import copy
 import cv2
 import numpy as np
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 DEBUG = True
 
 MANUAL = False
@@ -23,31 +19,18 @@ TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
 
 USING_VIDEO = True
-<<<<<<< Updated upstream
-VIDEO_NAME = "videos/ArucoTest2.mov"
-=======
 VIDEO_NAME = "videos/A1.mov"
 
-
-video_for_resolution = None
-
-if USING_VIDEO:
-    video_for_resolution = cv2.VideoCapture(VIDEO_NAME)
-
-else:
-    video_for_resolution = cv2.VideoCapture(0)
-
-ret, im = video_for_resolution.read()
-
-SCREEN_WIDTH = np.size(im, 1)
-SCREEN_HEIGHT = np.size(im, 0)
-
-print("Screen Width: ", SCREEN_WIDTH)
-print("Screen Height: ", SCREEN_HEIGHT)
->>>>>>> Stashed changes
-
 # Find all 4 corners
-setup = Setup(SCREEN_WIDTH, SCREEN_HEIGHT, TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
+setup = Setup(TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
+
+SCREEN_WIDTH = setup.get_width()
+SCREEN_HEIGHT = setup.get_height()
+
+if DEBUG:
+    print("Screen Width: ", SCREEN_WIDTH)
+    print("Screen Height: ", SCREEN_HEIGHT)
+
 corners = setup.detect_aruco_markers()
 if DEBUG:
     print(corners)
@@ -63,11 +46,9 @@ cal = Calibration(corners[1], corners[0], corners[3], corners[2], TABLE_WIDTH, T
 color = setup.find_color(cal)  # This is assuming that we have no-glare paint, so the whole ball is basically the same color
 if DEBUG:
     print(color)
-<<<<<<< Updated upstream
-color_leeway = (1,1,1)  # Hard-coded based on testing
-=======
+
 color_leeway = (100,70,70)  # Hard-coded based on testing
->>>>>>> Stashed changes
+
 ball_radius = 26  # Hard-coded based on testing (fixture leaves it set)
 
 if MANUAL:
