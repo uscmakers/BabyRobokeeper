@@ -80,9 +80,6 @@ class BallTracking():
     def get_center(self):        
         # Read in a frame
         ret, im = self.cap.read()
-        # 
-        # print(len(im))
-        # print(len(im[0]))
         for row in range(0, self.screen_height, int(self.ball_radius/2)):
             for col in range(0, self.screen_width, int(self.ball_radius/2)):
                 if self.is_single_color(im[row][col][0], im[row][col][1], im[row][col][2]): 

@@ -8,9 +8,9 @@ import copy
 import cv2
 import numpy as np
 
-DEBUG = True
+DEBUG = False
 
-MANUAL = False
+MANUAL = True
 
 SCREEN_WIDTH =  1920
 SCREEN_HEIGHT =  1080
@@ -18,12 +18,13 @@ SCREEN_HEIGHT =  1080
 TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
 
-USING_VIDEO = True
-VIDEO_NAME = "videos/A1.mov"
+USING_VIDEO = False
+VIDEO_NAME = "videos/A3.mov"
 
 # Find all 4 corners
 setup = Setup(TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
-
+# setup.getArudinoPort()
+# print("test")
 SCREEN_WIDTH = setup.get_width()
 SCREEN_HEIGHT = setup.get_height()
 
@@ -48,7 +49,6 @@ if DEBUG:
     print(color)
 
 color_leeway = (100,70,70)  # Hard-coded based on testing
-
 ball_radius = 26  # Hard-coded based on testing (fixture leaves it set)
 
 if MANUAL:
@@ -102,15 +102,22 @@ while True:
 
             if path_end == float("-inf"):
                 path_end = prev_path_end
-            elif (path_prediction.check_outlier(path_end)):
-                if DEBUG:
-                    print("OUTLIER: ", str(path_end))
             else:
-                if DEBUG:
-                    print("PATH END: ", str(path_end))
-                time_since_send = time.time()
-                if not DEBUG:
-                    rpi_communication.send_msg(str(path_end))
+                outlier_result = path_prediction.check_outlier(path_end)
+                if (outlier_result == True):
+                    if DEBUG:
+                        print("OUTLIER: ", str(path_end))
+                    # time_since_send = time.time()
+                    # if not DEBUG:
+                    #     rpi_communication.send_msg(str(outlier_result))
+                    #     print("OUTLIER: ", str(path_end))
+                    #     print(outlier_result)
+                else:
+                    if DEBUG:
+                        print("PATH END: ", str(path_end))
+                    time_since_send = time.time()
+                    if not DEBUG:
+                        rpi_communication.send_msg(str(path_end))
 
         prev_x = prj[0]
         prev_y = prj[1]

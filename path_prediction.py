@@ -6,6 +6,8 @@ class PathPrediction():
         #constants
         self.table_width = table_width
         self.table_height = table_height
+        self.data = []
+        self.window_size = 10
 
     def find_path_end(self, p1, p2):
         x1 = p1[0]
@@ -47,3 +49,26 @@ class PathPrediction():
     def check_speed(self, prev, curr, time):
         distance = np.sqrt((prev[0]-curr[0])**2 + (prev[1]-curr[1])**2)
         return ((distance/time) > 100)
+
+    def check_outlier(self, new_point):
+        self.data.append(new_point)
+
+        if len(self.data) > self.window_size:
+            self.data.pop(0)
+        
+        if (len(self.data) < self.window_size):
+            return False
+        else:
+            mean = np.mean(self.data)
+            std_dev = np.std(self.data)
+            if std_dev == 0:
+                # Avoid division by zero
+                return False
+
+            z_score = abs((new_point - mean) / std_dev)
+            # print("Z-score: ", z_score)
+            # if z_score > 1:
+            #     print(self.data)
+            #     return np.mean(self.data[6:9])
+            # return -1
+            return z_score > 1
