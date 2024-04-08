@@ -18,8 +18,8 @@ SCREEN_HEIGHT =  1080
 TABLE_WIDTH = 475
 TABLE_HEIGHT =  815
 
-USING_VIDEO = False
-VIDEO_NAME = "videos/A3.mov"
+USING_VIDEO = True
+VIDEO_NAME = "videos/ArucoTest2.mov"
 
 # Find all 4 corners
 setup = Setup(TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
@@ -39,17 +39,15 @@ if DEBUG:
 # Perform calibration
 cal = Calibration(corners[1], corners[0], corners[3], corners[2], TABLE_WIDTH, TABLE_HEIGHT)  # tr, tl, br, bl
 
-
-
 # Find color of ball automatically (to be added in Setup)
 # Instructions: Place the ball in the middle of the table when code is run
 # Output: color
-color = setup.find_color(cal)  # This is assuming that we have no-glare paint, so the whole ball is basically the same color
+color, ball_radius = setup.find_color(cal)  # This is assuming that we have no-glare paint, so the whole ball is basically the same color
 if DEBUG:
-    print(color)
+    print('Color: ', color)
+    print('Radius: ', ball_radius)
 
 color_leeway = (100,70,70)  # Hard-coded based on testing
-ball_radius = 26  # Hard-coded based on testing (fixture leaves it set)
 
 if MANUAL:
     highest_red = 255
