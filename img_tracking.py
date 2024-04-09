@@ -114,8 +114,8 @@ lowest_blue = 39
 
 color = (int((highest_red+lowest_red)/2), int((highest_green+lowest_green)/2), int((highest_blue+lowest_blue)/2))
 color_leeway = (highest_red - color[0], highest_green - color[1], highest_blue - color[2])
-print(color)
-print(color_leeway)
+# print(color)
+# print(color_leeway)
 resolution = (1920, 1080)
 ball_radius = 26
 
