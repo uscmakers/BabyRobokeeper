@@ -23,16 +23,12 @@ VIDEO_NAME = "videos/ArucoTest2.mov"
 
 # Find all 4 corners
 setup = Setup(TABLE_WIDTH, TABLE_HEIGHT, USING_VIDEO, VIDEO_NAME)
-# setup.getArudinoPort()
-# print("test")
+
 SCREEN_WIDTH = setup.get_width()
 SCREEN_HEIGHT = setup.get_height()
 
-if DEBUG:
-    print("Screen Width: ", SCREEN_WIDTH)
-    print("Screen Height: ", SCREEN_HEIGHT)
-
 corners = setup.detect_aruco_markers()
+
 if DEBUG:
     print(corners)
 
@@ -50,19 +46,19 @@ if DEBUG:
 color_leeway = (100,70,70)  # Hard-coded based on testing
 
 if MANUAL:
-    highest_red = 255
-    lowest_red = 160
+    highest_red = 255 # 255
+    lowest_red = 160 # 160
 
-    highest_green = 150
-    lowest_green = 80
+    highest_green = 250 # 150
+    lowest_green = 180 # 80
 
-    highest_blue = 110
-    lowest_blue = 39
+    highest_blue = 110 # 110
+    lowest_blue = 39 # 39
 
     color = (int((highest_red+lowest_red)/2), int((highest_green+lowest_green)/2), int((highest_blue+lowest_blue)/2))
     color_leeway = (highest_red - color[0], highest_green - color[1], highest_blue - color[2])
-    print(color)
-    print(color_leeway)
+    print("Manual Color: ", color)
+    print("Manual Color Leeway: ", color_leeway)
     ball_radius = 26
 
 img_tracking = BallTracking(SCREEN_WIDTH, SCREEN_HEIGHT, color, color_leeway, ball_radius, USING_VIDEO, VIDEO_NAME)
@@ -89,7 +85,6 @@ while True:
             rpi_communication.send_msg(str(0))
 
     x, y = img_tracking.get_center()
-    
     if x != -1:
         prj = cal.perform_transformation([x,y])
 
@@ -105,11 +100,6 @@ while True:
                 if (outlier_result == True):
                     if DEBUG:
                         print("OUTLIER: ", str(path_end))
-                    # time_since_send = time.time()
-                    # if not DEBUG:
-                    #     rpi_communication.send_msg(str(outlier_result))
-                    #     print("OUTLIER: ", str(path_end))
-                    #     print(outlier_result)
                 else:
                     if DEBUG:
                         print("PATH END: ", str(path_end))
