@@ -21,8 +21,9 @@ class Setup():
 
     def detect_aruco_markers(self):
         ret, im = self.cap.read()
-        # plt.imshow(im)
-        # plt.show()
+        cv2.imwrite('videos/test_img4.png', im)
+        plt.imshow(im)
+        plt.show()
 
         gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         dictionary = aruco.getPredefinedDictionary(aruco.DICT_4X4_100)
@@ -57,46 +58,42 @@ class Setup():
         plt.imshow(small_img)
         plt.show()
 
-        # Blur the image for edge detection
-        img_blur = cv2.GaussianBlur(small_img, (3,3), sigmaX=0, sigmaY=0)
-        plt.imshow(img_blur, cmap='gray')
+        # Split image based on color
+        img_blue, img_green, img_red = cv2.split(small_img)
+        plt.imshow(img_blue, cmap='gray')
+        plt.show()
+        plt.imshow(img_red, cmap='gray')
         plt.show()
 
-        # Get the edges from blurred image
-        edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)
-        plt.imshow(edges, cmap='gray')
+        # Create mask
+        blue_mask = img_blue > 220
+        red_mask = img_red < 150
+        mask = blue_mask & red_mask
+        mask = mask.astype(np.uint8) * 255
+        plt.imshow(mask, cmap='gray')
         plt.show()
 
-        # Blur edge image
-        edges_blur = cv2.GaussianBlur(edges, (3,3), sigmaX=10, sigmaY=10)
-        plt.imshow(edges_blur, cmap='gray')
-        plt.show()
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # Apply Hough circles on the blurred image. 
-        detected_circles = cv2.HoughCircles(edges_blur,  
-                        cv2.HOUGH_GRADIENT, 1, 20, param1 = 50, 
-                    param2 = 30, minRadius = 1, maxRadius = 40) 
-
-        # Get the center and radius of the ball
-        local_center = 0
-        radius = 0
-        if detected_circles is None:
-            print("Error")
+        if len(contours) > 0:
+            # Find the contour with the maximum area (the circle contour)
+            max_contour = max(contours, key=cv2.contourArea)
+            
+            # Fit a circle to the contour
+            (x, y), radius = cv2.minEnclosingCircle(max_contour)
+            local_center = (int(x), int(y))
+            radius = int(radius)
+            
+            # Draw the circle on the original image
+            result_image = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+            cv2.circle(result_image, local_center, radius, (0, 255, 0), 2)
+            plt.imshow(result_image)
+            plt.show()
         else:
-            detected_circles = np.uint16(np.around(detected_circles))
-            for circle in detected_circles[0,:]:
-                a, b, r = circle[0], circle[1], circle[2]
-                if r > 15 and r < 25:
-                    local_center = [a,b]
-                    radius = r
-        print('Center of circle: ', local_center)
-        print('Radius of circle: ', radius)
-        cv2.circle(small_img, local_center, radius, (255,0,0), 1)
-        plt.imshow(small_img)
-        plt.show()
+            print("No ball detected.")
 
         # Translate local center to center of entire image
-        center = [local_center[0]+ylim[0], local_center[1]+ylim[0]]
+        center = [local_center[0]+ylim[0], local_center[1]+xlim[0]]
         print('Center with respect to whole image: ', center)
         plt.imshow(im)
         plt.show()
